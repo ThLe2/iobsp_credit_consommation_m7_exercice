@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice d'entraînement — module 7</title><style>
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;
+ -webkit-user-select:none;-moz-user-select:none;user-select:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+.consigne{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:26px 0 8px;font-size:15px}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.etiq{display:inline-block;background:var(--prune-clair);color:var(--prune-fonce);font-size:11.5px;
+ letter-spacing:.09em;text-transform:uppercase;padding:3px 10px;border-radius:11px;font-weight:700;margin-bottom:10px}
+.enonce{font-weight:700;color:var(--vert);font-size:16.5px;margin:0 0 12px}
+.scenario{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:14px 16px;margin:0 0 14px;font-size:15px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:7px 0}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border:1.5px solid var(--filet);
+ border-radius:8px;cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
+.opts label:hover{border-color:var(--accent);background:#FDF9FC}
+.opts input{margin-top:4px;accent-color:var(--prune);flex:0 0 auto}
+.opts label.bonne{border-color:var(--ok);background:#F1F8F3}
+.opts label.mauvaise{border-color:var(--ko);background:#FBF2F2}
+.fb{margin-top:14px;padding:13px 16px;border-radius:8px;font-size:14.7px;display:none}
+.fb.on{display:block}
+.fb.j{background:#F1F8F3;border-left:4px solid var(--ok)}
+.fb.n{background:#FBF2F2;border-left:4px solid var(--ko)}
+.fb .verdict{font-weight:800;display:block;margin-bottom:5px}
+.fb.j .verdict{color:var(--ok)}.fb.n .verdict{color:var(--ko)}
+.ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gris-moyen);font-style:italic}
+button{font-family:inherit;font-size:15px;font-weight:800;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+button.principal{background:var(--prune);color:#fff}
+button.principal:hover{background:var(--prune-fonce)}
+button.principal:disabled{background:#D9CBD5;color:#fff;cursor:not-allowed}
+button.secondaire{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--prune)}
+.barre-actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+.bilan{display:none;margin:28px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--filet);background:#fff}
+.bilan.on{display:block}
+.bilan .tete{padding:20px 24px;color:#fff;text-align:center}
+.bilan .tete .pct{font-family:Georgia,serif;font-size:40px;font-weight:700;line-height:1}
+.bilan .tete .lib{font-size:14px;letter-spacing:.11em;text-transform:uppercase;margin-top:6px;opacity:.92}
+.bilan .corps{padding:18px 24px;font-size:15px}
+.progression{height:7px;background:var(--filet);border-radius:4px;overflow:hidden;margin:22px 0 4px}
+.progression i{display:block;height:100%;background:var(--prune);width:0;transition:width .3s}
+.compteur{font-size:12.5px;color:var(--gris-moyen);text-align:right}
+input[type=number]{font-family:inherit;font-size:15.5px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--vert);font-weight:700;width:130px;
+ -webkit-user-select:text;-moz-user-select:text;user-select:text}
+input:focus{outline:0;border-color:var(--accent)}
+input.bon{border-color:var(--ok);background:#F1F8F3}
+input.faux{border-color:var(--ko);background:#FBF2F2}
+.ligne-reponse{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ligne-reponse .unite{font-size:14.5px;color:var(--gris-moyen)}
+.reserve{display:flex;flex-wrap:wrap;gap:9px;padding:16px;background:#fff;border:1.5px dashed var(--accent);
+ border-radius:10px;min-height:64px;align-content:flex-start}
+.jeton{background:var(--prune-clair);border:1.5px solid var(--accent);color:var(--prune-fonce);
+ padding:8px 13px;border-radius:20px;font-size:14.3px;font-weight:700;cursor:grab;line-height:1.35}
+.jeton.actif{background:var(--prune);color:#fff;border-color:var(--prune-fonce);box-shadow:0 0 0 3px rgba(140,30,112,.18)}
+.jeton.bon{background:#EAF5EE;border-color:var(--ok);color:#1E5334}
+.jeton.faux{background:#FBF2F2;border-color:var(--ko);color:#8C2626}
+.zones{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.zone{background:#fff;border:1.5px solid var(--filet);border-radius:10px;padding:12px 14px;min-height:120px}
+.zone.survol{border-color:var(--prune);background:#FDF7FB}
+.zone h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15.5px;color:var(--prune-fonce)}
+.zone .desc{font-size:12.7px;color:var(--gris-moyen);margin:0 0 10px;line-height:1.4}
+.zone .depot{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+.aide{font-size:13.6px;color:var(--gris-moyen);margin-top:10px;font-style:italic}
+footer.pied{text-align:center;font-size:12.4px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:560px){h1{font-size:22px}.carte{padding:16px 15px}.wrap{padding:0 13px 44px}}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">IOBSP Niveau 2 · Bloc 2 <span>/</span> Journée 3 — Module 7</div><h1>Exercice d'entraînement — module 7</h1><p class="sous">3 activités transversales · les sept modules · non noté · environ 20 min</p>
+</div></header>
+<div class="wrap">
+<div class="consigne"><b>🎯 Exercice d'entraînement transversal.</b> Dernier exercice de la journée 3 : il mobilise les sept modules. Trois activités — replacer chaque geste dans la séquence du dossier, trancher huit situations, vérifier six affirmations. Aucune note n'est conservée et rien n'est à déposer.</div>
+<div class="progression"><i id="jauge"></i></div>
+<div class="compteur" id="compteur">0 / 24 réponses</div>
+<div class="carte"><span class="etiq">Activité 1 — La séquence du dossier</span><div class="scenario">Dix gestes professionnels, sept étapes. Replacez chacun à son moment dans le déroulement du dossier.</div><div class="reserve" id="reserve"><div class="jeton" draggable="true" data-id="j1">Vérifier que l&#x27;emprunteur est un consommateur et que le montant est dans les bornes</div><div class="jeton" draggable="true" data-id="j2">Repérer la date de conclusion du contrat pour déterminer le régime applicable</div><div class="jeton" draggable="true" data-id="j3">Se demander si le crédit finance un achat déterminé</div><div class="jeton" draggable="true" data-id="j4">Remettre la FIPEN en temps utile, sur support durable choisi par l&#x27;emprunteur</div><div class="jeton" draggable="true" data-id="j5">Adresser le rappel du droit de rétractation entre un et sept jours après la conclusion</div><div class="jeton" draggable="true" data-id="j6">Consulter le fichier des incidents et conserver la date de consultation</div><div class="jeton" draggable="true" data-id="j7">Faire signer la fiche d&#x27;informations de solvabilité et recueillir les justificatifs</div><div class="jeton" draggable="true" data-id="j8">Vérifier que le TAEG est inférieur au seuil de l&#x27;usure de la tranche applicable</div><div class="jeton" draggable="true" data-id="j9">Déterminer si le conjoint a donné un consentement exprès</div><div class="jeton" draggable="true" data-id="j10">Conserver la trace de la mise en garde et des explications adéquates</div></div><p class="aide">Faites glisser les étiquettes, ou touchez une étiquette puis la colonne.</p><div class="zones"><div class="zone" data-zone="e1"><h4>1. Qualifier</h4><p class="desc">Module 1</p><div class="depot"></div></div><div class="zone" data-zone="e2"><h4>2. Choisir la forme</h4><p class="desc">Module 2</p><div class="depot"></div></div><div class="zone" data-zone="e3"><h4>3. Informer</h4><p class="desc">Modules 1 et 3</p><div class="depot"></div></div><div class="zone" data-zone="e4"><h4>4. Analyser</h4><p class="desc">Modules 4 et 7</p><div class="depot"></div></div><div class="zone" data-zone="e5"><h4>5. Chiffrer</h4><p class="desc">Module 5</p><div class="depot"></div></div><div class="zone" data-zone="e6"><h4>6. Examiner les tiers</h4><p class="desc">Module 6</p><div class="depot"></div></div><div class="zone" data-zone="e7"><h4>7. Décider et tracer</h4><p class="desc">Module 7</p><div class="depot"></div></div></div><div class="fb" id="fbT"></div></div>
+<div class="carte"><span class="etiq">Activité 2 — Huit situations, sept modules</span><div class="scenario">Chaque cas mobilise un module différent de la journée.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un prêteur ne peut pas justifier avoir vérifié la solvabilité de l&#x27;emprunteur. Que risque-t-il ?</p><ul class="opts"><li><label id="cl0_0"><input type="radio" name="ca0" value="0"><span>La nullité du contrat de crédit</span></label></li><li><label id="cl0_1"><input type="radio" name="ca0" value="1"><span>La déchéance du droit aux intérêts, en totalité ou dans la proportion fixée par le juge</span></label></li><li><label id="cl0_2"><input type="radio" name="ca0" value="2"><span>Une amende administrative de 300 000 €</span></label></li><li><label id="cl0_3"><input type="radio" name="ca0" value="3"><span>Rien : l&#x27;emprunteur avait signé une déclaration sur l&#x27;honneur</span></label></li></ul><div class="fb" id="fca0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quelle fiche l&#x27;emprunteur signe-t-il, avec une déclaration certifiant sur l&#x27;honneur l&#x27;exactitude des informations ?</p><ul class="opts"><li><label id="cl1_0"><input type="radio" name="ca1" value="0"><span>La FIPEN</span></label></li><li><label id="cl1_1"><input type="radio" name="ca1" value="1"><span>La fiche d&#x27;informations relative à la solvabilité</span></label></li><li><label id="cl1_2"><input type="radio" name="ca1" value="2"><span>Le bordereau de rétractation</span></label></li><li><label id="cl1_3"><input type="radio" name="ca1" value="3"><span>Le tableau d&#x27;amortissement</span></label></li></ul><div class="fb" id="fca1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un client déclare 2 400 € de revenus mensuels pour un crédit de 8 000 €. Sa déclaration suffit-elle ?</p><ul class="opts"><li><label id="cl2_0"><input type="radio" name="ca2" value="0"><span>Oui, elle est certifiée sur l&#x27;honneur</span></label></li><li><label id="cl2_1"><input type="radio" name="ca2" value="1"><span>Non : au-delà de 3 000 €, elle doit être corroborée par des pièces justificatives</span></label></li><li><label id="cl2_2"><input type="radio" name="ca2" value="2"><span>Oui, si le fichier des incidents ne révèle rien</span></label></li><li><label id="cl2_3"><input type="radio" name="ca2" value="3"><span>Non, il faut systématiquement l&#x27;avis d&#x27;imposition des trois dernières années</span></label></li></ul><div class="fb" id="fca2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Une cliente sollicite un crédit affecté pour une cuisine de 9 400 €. Ses charges atteindraient 52 % de ses revenus. Quelle obligation se déclenche ?</p><ul class="opts"><li><label id="cl3_0"><input type="radio" name="ca3" value="0"><span>Aucune : le seuil légal est de 33 %</span></label></li><li><label id="cl3_1"><input type="radio" name="ca3" value="1"><span>Le devoir de mise en garde envers l&#x27;emprunteur, dont la trace doit être conservée</span></label></li><li><label id="cl3_2"><input type="radio" name="ca3" value="2"><span>L&#x27;obligation de refuser le crédit</span></label></li><li><label id="cl3_3"><input type="radio" name="ca3" value="3"><span>L&#x27;obligation de demander une caution</span></label></li></ul><div class="fb" id="fca3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un vendeur en magasin propose un crédit renouvelable pour financer un achat déterminé de 1 800 €.</p><ul class="opts"><li><label id="cl4_0"><input type="radio" name="ca4" value="0"><span>C&#x27;est conforme : le client choisit librement</span></label></li><li><label id="cl4_1"><input type="radio" name="ca4" value="1"><span>Une proposition de crédit amortissable comparable doit accompagner l&#x27;offre</span></label></li><li><label id="cl4_2"><input type="radio" name="ca4" value="2"><span>Le crédit renouvelable est interdit sur le lieu de vente</span></label></li><li><label id="cl4_3"><input type="radio" name="ca4" value="3"><span>Il faut l&#x27;accord préalable du prêteur</span></label></li></ul><div class="fb" id="fca4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le vendeur indique oralement qu&#x27;une assurance « facultative » à 9 € par mois conditionne l&#x27;accord. Quelle conséquence ?</p><ul class="opts"><li><label id="cl5_0"><input type="radio" name="ca5" value="0"><span>Aucune : l&#x27;offre la qualifie de facultative</span></label></li><li><label id="cl5_1"><input type="radio" name="ca5" value="1"><span>Elle est obligatoire en fait, et son coût doit entrer dans le TAEG</span></label></li><li><label id="cl5_2"><input type="radio" name="ca5" value="2"><span>Le client doit la refuser pour obtenir un TAEG exact</span></label></li><li><label id="cl5_3"><input type="radio" name="ca5" value="3"><span>Le TAEG doit être présenté dans les deux hypothèses</span></label></li></ul><div class="fb" id="fca5"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La cliente est mariée sous le régime légal et emprunte seule 9 400 €. Son époux n&#x27;a rien signé. Sur quels biens le prêteur peut-il agir ?</p><ul class="opts"><li><label id="cl6_0"><input type="radio" name="ca6" value="0"><span>Sur tous les biens du couple</span></label></li><li><label id="cl6_1"><input type="radio" name="ca6" value="1"><span>Sur les biens propres et les revenus de la cliente uniquement</span></label></li><li><label id="cl6_2"><input type="radio" name="ca6" value="2"><span>Sur les biens communs uniquement</span></label></li><li><label id="cl6_3"><input type="radio" name="ca6" value="3"><span>Sur les biens propres des deux époux</span></label></li></ul><div class="fb" id="fca6"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La cliente est gérante d&#x27;une SARL et votre établissement adhère à FIBEN. Le crédit finance sa cuisine. Pouvez-vous consulter son indicateur dirigeant ?</p><ul class="opts"><li><label id="cl7_0"><input type="radio" name="ca7" value="0"><span>Oui, l&#x27;établissement y a accès</span></label></li><li><label id="cl7_1"><input type="radio" name="ca7" value="1"><span>Non : l&#x27;usage de FIBEN est prohibé pour un besoin non professionnel</span></label></li><li><label id="cl7_2"><input type="radio" name="ca7" value="2"><span>Oui, avec son accord écrit</span></label></li><li><label id="cl7_3"><input type="radio" name="ca7" value="3"><span>Oui, mais sans le faire figurer au dossier</span></label></li></ul><div class="fb" id="fca7"></div></div></div>
+<div class="carte"><span class="etiq">Activité 3 — Vrai ou faux</span><div class="scenario">Six affirmations sur la constitution du dossier et la preuve.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La vérification de la solvabilité peut intervenir après la conclusion du contrat, à condition d&#x27;être faite dans le mois.</p><ul class="opts"><li><label id="vl0_1"><input type="radio" name="vf0" value="1"><span>Vrai</span></label></li><li><label id="vl0_0"><input type="radio" name="vf0" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La charge de la preuve du respect de ses obligations pèse sur le professionnel.</p><ul class="opts"><li><label id="vl1_1"><input type="radio" name="vf1" value="1"><span>Vrai</span></label></li><li><label id="vl1_0"><input type="radio" name="vf1" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le code de la consommation dresse la liste exhaustive des pièces devant composer un dossier de crédit.</p><ul class="opts"><li><label id="vl2_1"><input type="radio" name="vf2" value="1"><span>Vrai</span></label></li><li><label id="vl2_0"><input type="radio" name="vf2" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Les pièces justificatives sont conservées pendant la durée du contrat.</p><ul class="opts"><li><label id="vl3_1"><input type="radio" name="vf3" value="1"><span>Vrai</span></label></li><li><label id="vl3_0"><input type="radio" name="vf3" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le devoir de mise en garde dû à la caution et celui dû à l&#x27;emprunteur sont une seule et même obligation.</p><ul class="opts"><li><label id="vl4_1"><input type="radio" name="vf4" value="1"><span>Vrai</span></label></li><li><label id="vl4_0"><input type="radio" name="vf4" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">À compter du 20 novembre 2026, un découvert autorisé de 150 € consenti pour trois semaines suppose une évaluation de la solvabilité.</p><ul class="opts"><li><label id="vl5_1"><input type="radio" name="vf5" value="1"><span>Vrai</span></label></li><li><label id="vl5_0"><input type="radio" name="vf5" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv5"></div></div></div>
+ <div class="bilan" id="bilan">
+  <div class="tete" id="bilan-tete"><div class="pct" id="bilan-pct">0 %</div><div class="lib" id="bilan-lib"></div></div>
+  <div class="corps" id="bilan-corps"></div>
+ </div>
+ <div class="barre-actions">
+  <button class="principal" id="btn-valider">Vérifier mes réponses</button>
+  <button class="secondaire" id="btn-refaire">Refaire l'exercice</button>
+ </div>
+</div>
+<footer class="pied">TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+<script>
+(function(){
+  function libre(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  ['copy','cut','contextmenu'].forEach(function(ev){
+    document.addEventListener(ev,function(e){ if(!libre(e)) e.preventDefault(); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(libre(e)) return;
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].indexOf(k)>-1) e.preventDefault();
+  });
+})();
+function palier(p){
+  if(p>=90) return {lib:'Excellent', c:'#2F7A4F'};
+  if(p>=70) return {lib:'Validé', c:'#3F7A5E'};
+  if(p>=50) return {lib:'À consolider', c:'#B5852A'};
+  return {lib:'À retravailler', c:'#B23B3B'};
+}
+function afficherBilan(bon,total,texte){
+  var p = total? Math.round(bon*100/total):0, pa=palier(p);
+  document.getElementById('bilan-tete').style.background=pa.c;
+  document.getElementById('bilan-pct').textContent=p+' %';
+  document.getElementById('bilan-lib').textContent=pa.lib+' — '+bon+' / '+total;
+  document.getElementById('bilan-corps').innerHTML=texte;
+  var b=document.getElementById('bilan'); b.classList.add('on');
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+var JZ={"j1": "e1", "j2": "e1", "j3": "e2", "j4": "e3", "j5": "e3", "j6": "e4", "j7": "e4", "j8": "e5", "j9": "e6", "j10": "e7"}, JL={"j1": "Vérifier que l'emprunteur est un consommateur et que le montant est dans les bornes", "j2": "Repérer la date de conclusion du contrat pour déterminer le régime applicable", "j3": "Se demander si le crédit finance un achat déterminé", "j4": "Remettre la FIPEN en temps utile, sur support durable choisi par l'emprunteur", "j5": "Adresser le rappel du droit de rétractation entre un et sept jours après la conclusion", "j6": "Consulter le fichier des incidents et conserver la date de consultation", "j7": "Faire signer la fiche d'informations de solvabilité et recueillir les justificatifs", "j8": "Vérifier que le TAEG est inférieur au seuil de l'usure de la tranche applicable", "j9": "Déterminer si le conjoint a donné un consentement exprès", "j10": "Conserver la trace de la mise en garde et des explications adéquates"}, JE={"j1": "Étape 1 — qualifier. C'est la question qui commande toutes les autres (module 1).", "j2": "Étape 1 également : un énoncé daté n'est jamais daté par hasard.", "j3": "Étape 2 — choisir la forme. Première des quatre questions : si oui, le crédit affecté s'impose (module 2).", "j4": "Étape 3 — informer (module 1).", "j5": "Étape 3 : dû lorsque l'information a été fournie moins d'un jour avant l'engagement.", "j6": "Étape 4 — analyser (modules 4 et 7). La preuve de la consultation pèse sur le prêteur.", "j7": "Étape 4 : au-delà de 3 000 €, les déclarations doivent être corroborées par des pièces.", "j8": "Étape 5 — chiffrer (module 5). On compare le TAEG, jamais le taux débiteur.", "j9": "Étape 6 — examiner les tiers (module 6, article 1415 pour les couples en communauté).", "j10": "Étape 7 — décider et tracer. Ce qui n'est pas tracé n'a pas eu lieu."}, ZL={"e1": "1. Qualifier", "e2": "2. Choisir la forme", "e3": "3. Informer", "e4": "4. Analyser", "e5": "5. Chiffrer", "e6": "6. Examiner les tiers", "e7": "7. Décider et tracer"}, CS=[{"c": 1, "e": "L'emprunteur ne rembourse alors que le capital. Le juge dispose d'un pouvoir souverain pour moduler. Et la déclaration sur l'honneur du client ne dispense pas le professionnel de prouver son analyse.", "opts": ["La nullité du contrat de crédit", "La déchéance du droit aux intérêts, en totalité ou dans la proportion fixée par le juge", "Une amende administrative de 300 000 €", "Rien : l'emprunteur avait signé une déclaration sur l'honneur"]}, {"c": 1, "e": "C'est le piège du module. La FIPEN va du professionnel vers le client et l'informe ; la fiche de solvabilité va du client vers le professionnel et le renseigne. C'est cette dernière qui est signée.", "opts": ["La FIPEN", "La fiche d'informations relative à la solvabilité", "Le bordereau de rétractation", "Le tableau d'amortissement"]}, {"c": 1, "e": "Le texte dit « y compris les informations fournies par l'emprunteur » : elles comptent, elles ne suffisent pas. Au-delà du seuil réglementaire de 3 000 €, elles doivent être appuyées par des justificatifs.", "opts": ["Oui, elle est certifiée sur l'honneur", "Non : au-delà de 3 000 €, elle doit être corroborée par des pièces justificatives", "Oui, si le fichier des incidents ne révèle rien", "Non, il faut systématiquement l'avis d'imposition des trois dernières années"]}, {"c": 1, "e": "Aucun seuil chiffré ne conditionne à lui seul la mise en garde : elle se déclenche lorsque l'opération présente un risque au regard de la situation de l'emprunteur. Rien n'impose de refuser, mais l'alerte doit être donnée et tracée.", "opts": ["Aucune : le seuil légal est de 33 %", "Le devoir de mise en garde envers l'emprunteur, dont la trace doit être conservée", "L'obligation de refuser le crédit", "L'obligation de demander une caution"]}, {"c": 1, "e": "Au-delà du seuil de 1 000 € sur le lieu de vente ou à distance, l'offre de renouvelable doit être accompagnée d'une proposition de crédit amortissable, comparable sur au moins deux hypothèses de délai (module 2).", "opts": ["C'est conforme : le client choisit librement", "Une proposition de crédit amortissable comparable doit accompagner l'offre", "Le crédit renouvelable est interdit sur le lieu de vente", "Il faut l'accord préalable du prêteur"]}, {"c": 1, "e": "Le qualificatif employé ne fait pas la règle : c'est la réalité de l'exigence qui compte. Un TAEG calculé sans elle serait erroné (module 5).", "opts": ["Aucune : l'offre la qualifie de facultative", "Elle est obligatoire en fait, et son coût doit entrer dans le TAEG", "Le client doit la refuser pour obtenir un TAEG exact", "Le TAEG doit être présenté dans les deux hypothèses"]}, {"c": 1, "e": "L'article 220 exclut les emprunts de la solidarité et l'exception ne joue pas à 9 400 €. On applique l'article 1415 : sans consentement exprès, elle n'engage que ses biens propres et ses revenus (module 6).", "opts": ["Sur tous les biens du couple", "Sur les biens propres et les revenus de la cliente uniquement", "Sur les biens communs uniquement", "Sur les biens propres des deux époux"]}, {"c": 1, "e": "L'accès au fichier ne vaut pas autorisation de s'en servir. La question n'est pas « puis-je le lire ? » mais « pour quel besoin ce crédit est-il sollicité ? » (module 4).", "opts": ["Oui, l'établissement y a accès", "Non : l'usage de FIBEN est prohibé pour un besoin non professionnel", "Oui, avec son accord écrit", "Oui, mais sans le faire figurer au dossier"]}], VF=[{"r": false, "e": "Faux. Le texte dit « avant de conclure le contrat de crédit » : l'obligation est précontractuelle et ne se rattrape pas.", "ref": "art. L. 312-16 C. consom."}, {"r": true, "e": "Exact, et c'est ce qui explique tout le formalisme du module. Les décisions ne reprochent pas au prêteur de n'avoir rien fait, mais de « ne pas justifier » l'avoir fait.", "ref": "art. L. 312-16 et L. 341-1 et s. C. consom."}, {"r": false, "e": "Faux. Le texte impose « un nombre suffisant d'informations » sans établir de catalogue fermé. La liste des pièces relève de la pratique professionnelle organisée.", "ref": "art. L. 312-16 C. consom."}, {"r": true, "e": "Exact. Ce n'est pas une précaution mais la condition d'être en mesure de prouver, parfois plusieurs années après.", "ref": "pratique et art. L. 341-1 et s. C. consom."}, {"r": false, "e": "Faux. Celle due à l'emprunteur se déclenche lorsque l'opération présente un risque au regard de sa situation. Celle due à la caution, à l'article 2299 du code civil, porte sur l'inadaptation de l'engagement du débiteur à ses propres capacités. Deux personnes, deux obligations, deux traces.", "ref": "art. L. 312-14 C. consom. et 2299 C. civ."}, {"r": true, "e": "Exact. La zone grise se referme : tous les découverts autorisés entrent dans le champ. L'évaluation est toutefois proportionnée au montant et à la durée — allégée, mais jamais absente.", "ref": "ord. n° 2025-880 du 3 septembre 2025"}];
+var NJ=Object.keys(JZ).length, valide=false, actif=null;
+var TOTAL = NJ + CS.length + VF.length;
+
+function placesJ(){ return document.querySelectorAll('.zone .depot .jeton').length; }
+function progresse(){
+  var n = placesJ();
+  for(var i=0;i<CS.length;i++){ if(document.querySelector('input[name="ca'+i+'"]:checked')) n++; }
+  for(var m=0;m<VF.length;m++){ if(document.querySelector('input[name="vf'+m+'"]:checked')) n++; }
+  document.getElementById('jauge').style.width = Math.round(n*100/TOTAL)+'%';
+  document.getElementById('compteur').textContent = n+' / '+TOTAL+' réponses';
+  document.getElementById('btn-valider').disabled = (n<TOTAL) || (placesJ()!==NJ) || valide;
+}
+document.querySelectorAll('input[type=radio]').forEach(function(x){ x.addEventListener('change', progresse); });
+function deselect(){ if(actif){ actif.classList.remove('actif'); actif=null; } }
+function deposer(j,c){ if(valide) return; c.appendChild(j); deselect(); progresse(); }
+var res=document.getElementById('reserve');
+document.querySelectorAll('.jeton').forEach(function(j){
+  j.addEventListener('click', function(e){
+    if(valide) return; e.stopPropagation();
+    if(actif && actif!==j){
+      var c=j.parentElement;
+      if(c.classList.contains('depot')||c.classList.contains('reserve')){ deposer(actif,c); return; }
+    }
+    if(j.parentElement.classList.contains('depot')){ deposer(j,res); return; }
+    if(actif===j){ deselect(); return; }
+    deselect(); actif=j; j.classList.add('actif');
+  });
+  j.addEventListener('dragstart', function(e){
+    if(valide){ e.preventDefault(); return; }
+    actif=j; e.dataTransfer.setData('text/plain', j.dataset.id);
+  });
+});
+document.querySelectorAll('.zone').forEach(function(z){
+  var dep=z.querySelector('.depot');
+  z.addEventListener('dragover', function(e){ if(!valide){ e.preventDefault(); z.classList.add('survol'); } });
+  z.addEventListener('dragleave', function(){ z.classList.remove('survol'); });
+  z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('survol'); if(actif) deposer(actif,dep); });
+  z.addEventListener('click', function(){ if(actif) deposer(actif,dep); });
+});
+res.addEventListener('dragover', function(e){ if(!valide) e.preventDefault(); });
+res.addEventListener('drop', function(e){ e.preventDefault(); if(actif) deposer(actif,res); });
+res.addEventListener('click', function(){ if(actif) deposer(actif,res); });
+document.body.addEventListener('click', deselect);
+
+document.getElementById('btn-valider').addEventListener('click', function(e){
+  e.stopPropagation();
+  if(valide) return; valide=true; deselect();
+  var bon=0, bonJ=0, li='';
+  Object.keys(JZ).forEach(function(id){
+    var j=document.querySelector('.jeton[data-id="'+id+'"]');
+    var z=j.closest('.zone'), juste = z && z.dataset.zone===JZ[id];
+    j.classList.add(juste?'bon':'faux'); j.setAttribute('draggable','false');
+    if(juste) bonJ++; else li += '<li><b>'+JL[id]+'</b> → '+ZL[JZ[id]]+'. '+JE[id]+'</li>';
+  });
+  bon += bonJ;
+  var ft=document.getElementById('fbT');
+  ft.innerHTML='<span class="verdict">'+(bonJ===NJ?'✓ La séquence est maîtrisée':'✗ '+bonJ+' / '+NJ+' bien placés')+'</span>'
+    + (li ? '<b>À corriger :</b><ul style="margin:8px 0 0;padding-left:20px">'+li+'</ul>'
+          : 'Chaque geste est à son étape. C\'est exactement le déroulement que l\'épreuve vous demandera.');
+  ft.className='fb on '+(bonJ===NJ?'j':'n');
+  for(var i=0;i<CS.length;i++){
+    var ch=document.querySelector('input[name="ca'+i+'"]:checked');
+    var idx=ch?parseInt(ch.value,10):-1, juste3=(idx===CS[i].c);
+    if(juste3) bon++;
+    document.getElementById('cl'+i+'_'+CS[i].c).classList.add('bonne');
+    if(!juste3 && idx>=0) document.getElementById('cl'+i+'_'+idx).classList.add('mauvaise');
+    document.querySelectorAll('input[name="ca'+i+'"]').forEach(function(r){ r.disabled=true; });
+    var f3=document.getElementById('fca'+i);
+    var h3='<span class="verdict">'+(juste3?'✓ Exact':'✗ Inexact')+'</span>';
+    if(!juste3) h3 += '<div style="margin-bottom:6px"><b>Réponse attendue :</b> '+CS[i].opts[CS[i].c]+'</div>';
+    f3.innerHTML = h3 + CS[i].e;
+    f3.className='fb on '+(juste3?'j':'n');
+  }
+  for(var m=0;m<VF.length;m++){
+    var ch2=document.querySelector('input[name="vf'+m+'"]:checked');
+    var rep=ch2?(ch2.value==='1'):null, juste4=(rep===VF[m].r);
+    if(juste4) bon++;
+    document.getElementById('vl'+m+'_'+(VF[m].r?1:0)).classList.add('bonne');
+    if(!juste4 && ch2) document.getElementById('vl'+m+'_'+ch2.value).classList.add('mauvaise');
+    document.querySelectorAll('input[name="vf'+m+'"]').forEach(function(r){ r.disabled=true; });
+    var f4=document.getElementById('fv'+m);
+    f4.innerHTML='<span class="verdict">'+(juste4?'✓ Exact':'✗ Inexact')+'</span>'+VF[m].e
+               +'<span class="ref">'+VF[m].ref+'</span>';
+    f4.className='fb on '+(juste4?'j':'n');
+  }
+  document.getElementById('btn-valider').disabled=true;
+  document.getElementById('btn-valider').textContent='Atelier validé';
+  afficherBilan(bon, TOTAL,
+    'Dernier exercice de la journée 3. Si la séquence en sept étapes se déroule sans hésitation sur un cas '
+    + 'qu\'on vous soumet, vous avez la journée. Et retenez la phrase du module : <b>ce qui n\'est pas tracé '
+    + 'n\'a pas eu lieu</b>. Enchaînez sur le <b>QCM du module 7</b>.');
+});
+progresse();
+
+document.getElementById('btn-refaire').addEventListener('click',function(){ location.reload(); });
+</script></body></html>
